@@ -16,6 +16,7 @@ export const CreateTrips = async(formData:FormData)=>{
     const description =  formData.get("description")?.toString()
     const startDateStr = formData.get("startDate")?.toString()
     const endDateStr = formData.get("endDate")?.toString()
+    const imageUrl = formData.get("imageUrl")?.toString()
 
     if(!title || !description || !startDateStr || !endDateStr ){
         throw new Error("All field are required")
@@ -30,7 +31,8 @@ export const CreateTrips = async(formData:FormData)=>{
             description,
             startDate,
             endDate,
-            userId:session?.user?.id
+            userId:session?.user?.id,
+            imageUrl
         }
     })
 
