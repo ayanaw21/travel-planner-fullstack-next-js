@@ -3,22 +3,27 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { CreateTrips } from "@/lib/actions/create-trips";
+import { UploadButton } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
-import { useTransition } from "react";
+import Image from "next/image";
+import { useState, useTransition } from "react";
 
 export default function NewTrip() {
-    const [isPending,startTransition] = useTransition()
-
+	const [isPending, startTransition] = useTransition();
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
 	return (
 		<div className="max-w-lg mx-auto mt-10">
 			<Card>
 				<CardHeader>New Trip</CardHeader>
 				<CardContent>
-					<form action={(formData:FormData)=>{
-                        startTransition(()=>{
-                            CreateTrips(formData)
-                        })
-                    }} className="space-y-6">
+					<form
+						action={(formData: FormData) => {
+							startTransition(() => {
+								CreateTrips(formData);
+							});
+						}}
+						className="space-y-6"
+					>
 						<div>
 							<label
 								htmlFor="title"
@@ -68,7 +73,6 @@ export default function NewTrip() {
 									type="date"
 									id="startDate"
 									name="startDate"
-									
 									className={cn(
 										"w-full border border-gray-300 px-3 py-2",
 										"rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -86,7 +90,6 @@ export default function NewTrip() {
 									type="date"
 									id="endDate"
 									name="endDate"
-								
 									className={cn(
 										"w-full border border-gray-300 px-3 py-2",
 										"rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -94,9 +97,31 @@ export default function NewTrip() {
 								/>
 							</div>
 						</div>
-                        <Button type="submit" disabled={isPending} className="w-full ">
-                            {isPending ? "Creating" : "Create Trip"}
-                        </Button>
+						<div>
+							<label htmlFor="">Trip Image</label>
+                            {imageUrl && (
+                                <Image src={imageUrl} alt="Trip Preview" width={300} height={300} className="w-full rounded-md max-h-48 object-cover" />
+                            )}
+							<UploadButton
+								endpoint={"imageUploader"}
+								onClientUploadComplete={(res) => {
+									if (res && res[0].ufsUrl) {
+										setImageUrl(res[0].ufsUrl);
+									}
+								}}
+								onUploadError={(error) => {
+									console.error("Upload:  ", error);
+								}}
+							/>
+						</div>
+
+						<Button
+							type="submit"
+							disabled={isPending}
+							className="w-full "
+						>
+							{isPending ? "Creating" : "Create Trip"}
+						</Button>
 					</form>
 				</CardContent>
 			</Card>
