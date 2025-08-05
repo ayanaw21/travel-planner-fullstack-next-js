@@ -4,7 +4,7 @@ import { auth } from "@/auth";
 import { prisma } from "../prisma";
 import { redirect } from "next/navigation";
 async function geoCodeAddress(address: string) {
-	const apiKey = process.env.MAP_BOX_API_KEY;
+	const apiKey = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
 	const response = await fetch(
 		`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
 			address

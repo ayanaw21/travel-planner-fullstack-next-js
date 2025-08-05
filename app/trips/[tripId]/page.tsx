@@ -7,7 +7,8 @@ const TripDetail = async({params}:{params:Promise<{tripId:string}>}) => {
   const {tripId} = await params;
   const session = await auth()
   const trip = await prisma.trip.findFirst({
-    where : {id:tripId,userId:session?.user?.id}
+    where : {id:tripId,userId:session?.user?.id},
+    include:{locations:true}
   })
   if(!session){
     return <div>Please Sign in.</div>
@@ -15,6 +16,7 @@ const TripDetail = async({params}:{params:Promise<{tripId:string}>}) => {
   if(!trip) {
     return <div>Trip not Found</div>
   }
+  // console.log(trip)
   return (
     <TripDetailClient trip={trip}/>
   )
