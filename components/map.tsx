@@ -78,7 +78,7 @@ const MapP = ({ itineraries }: MapProps) => {
 					position="top-left"
 					showUserLocation
 					showAccuracyCircle={false}
-					auto
+					
 				/>
 				<FullscreenControl position="top-left" />
 			</Map>
