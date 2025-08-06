@@ -1,45 +1,86 @@
+"use client";
+
+import React, { useState } from "react";
+import {
+	Map,
+	Marker,
+	Popup,
+	NavigationControl,
+	GeolocateControl,
+	FullscreenControl,
+} from "react-map-gl/mapbox";
+
 import { Location } from "@/app/generated/prisma";
-import React from "react";
-import { Map, Marker } from "react-map-gl/mapbox"; // or 'react-map-gl/mapbox' if using Mapbox
-
-// import { useLoadScript } from "@react-google-maps/api";
-
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MapPin } from "lucide-react";
+
 interface MapProps {
 	itineraries: Location[];
 }
 
 const MapP = ({ itineraries }: MapProps) => {
-	const { lng, lat } = itineraries[0];
-	// console.log(itineraries[0])
+	const [selectedLocation, setSelectedLocation] = useState<Location | null>(null);
+
+	// Fallback center
+	const { lng, lat } = itineraries[0] || { lng: 38.761253, lat: 9.010793 };
+
+	
+	
+
 	return (
-		<div>
+		<div className="relative">
 			<Map
 				mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
 				initialViewState={{
-					longitude: lng | 0,
-					latitude: lat | 0,
+					longitude: lng,
+					latitude: lat,
 					zoom: 8,
 				}}
 				style={{ width: "100%", height: 400 }}
 				mapStyle="mapbox://styles/mapbox/streets-v11"
 			>
-				{itineraries.map((location, key) => (
+				{/* Markers */}
+				{itineraries.map((location, index) => (
 					<Marker
-						key={key}
+						key={index}
 						latitude={location.lat}
 						longitude={location.lng}
-            anchor="bottom"
+						anchor="bottom"
 					>
 						<div
+							className="cursor-pointer"
+							onClick={() => setSelectedLocation(location)}
 							title={location.locationTitle}
-							className="text-[24px]"
 						>
-							<MapPin className="w-8 h-8 text-red-600 drop-shadow-lg" />
+							<MapPin className="w-8 h-8 text-red-600 drop-shadow-md" />
 						</div>
 					</Marker>
 				))}
+
+				{/* Popup for selected location */}
+				{selectedLocation && (
+					<Popup
+						longitude={selectedLocation.lng}
+						latitude={selectedLocation.lat}
+						anchor="top"
+						onClose={() => setSelectedLocation(null)}
+						closeOnClick={false}
+					>
+						<div className="text-sm font-medium text-black">
+							{selectedLocation.locationTitle}
+						</div>
+					</Popup>
+				)}
+
+				{/* Map Controls */}
+				<NavigationControl position="top-left" />
+				<GeolocateControl
+					position="top-left"
+					showUserLocation
+					showAccuracyCircle={false}
+					auto
+				/>
+				<FullscreenControl position="top-left" />
 			</Map>
 		</div>
 	);

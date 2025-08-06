@@ -151,7 +151,34 @@ const TripDetailClient = ({ trip }: TripDetailClientProps) => {
 						)
 						}
 					</TabsContent>
+					<TabsContent value="map" className="space-y-6">
+							
+							<div className="h-72 rounded-lg overflow-hidden shadow">
+								<MapP itineraries={trip.locations} />
+							</div>
+							{trip.locations.length === 0 && (
+								<div className="text-center p-4">
+									<p>Add Location to them on the map.</p>
+									<Link
+										href={`/trips/${trip.id}/itinerary/new`}
+									>
+										<Button>
+											<Plus className="mr-2 h-5 w-5" />{" "}
+											Add Location
+										</Button>
+									</Link>
+								</div>
+							)}
+							
+					</TabsContent>
 				</Tabs>
+			</div>
+			<div>
+				<Link href={`/trips`}>
+						<Button>
+							{" "}Back To Trips
+						</Button>
+					</Link>
 			</div>
 		</div>
 	);
