@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { useState } from "react";
 import { TabsContent } from "@radix-ui/react-tabs";
 import MapP from "./map";
+import SortableItinerary from "./sortable-itinerary";
 
 export type TripWithLocation = Trip & {
 	locations: Location[];
@@ -73,7 +74,7 @@ const TripDetailClient = ({ trip }: TripDetailClientProps) => {
 									Trip Summary
 								</h2>
 								<div className="space-y-4">
-									<div className="flex items-start">
+									<div className="flex items-start gap-2">
 										<Calendar className="h-6 w-6 mt-3 text-gray-500" />
 										<div className="">
 											<p className="font-medium text-gray-700">
@@ -123,11 +124,33 @@ const TripDetailClient = ({ trip }: TripDetailClientProps) => {
 								</div>
 							)}
 							<div>
-								<p className="text-gray-600 leading-relaxed">{trip.description}</p>
+								<p className="text-gray-600 leading-relaxed">
+									{trip.description}
+								</p>
 							</div>
 						</div>
 					</TabsContent>
-					
+					<TabsContent value="itinerary" className="space-y-6">
+						<div className="flex justify-between items-center mb-4">
+							<h2 className="text-2xl font-semibold">
+								Full Itinerary
+							</h2>
+						</div>
+						{trip.locations.length === 0 ? (
+							<div className="text-center p-4">
+								<p>Add Location to them on the itinerary.</p>
+								<Link href={`/trips/${trip.id}/itinerary/new`}>
+									<Button>
+										<Plus className="mr-2 h-5 w-5" /> Add
+										Location
+									</Button>
+								</Link>
+							</div>
+						):(
+							<SortableItinerary locations={trip.locations} tripId={trip.id} />
+						)
+						}
+					</TabsContent>
 				</Tabs>
 			</div>
 		</div>
