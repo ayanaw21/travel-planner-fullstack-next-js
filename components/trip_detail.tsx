@@ -112,7 +112,7 @@ const TripDetailClient = ({ trip }: TripDetailClientProps) => {
 							</div>
 							{trip.locations.length === 0 && (
 								<div className="text-center p-4">
-									<p>Add Location to them on the map.</p>
+									<p>Add Location to see them on the map.</p>
 									<Link
 										href={`/trips/${trip.id}/itinerary/new`}
 									>
